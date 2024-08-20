@@ -5,6 +5,7 @@ import {
   FaCog,
   FaPencilAlt,
   FaComments,
+  FaEdit,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -65,6 +66,8 @@ const MyPage = () => {
       if (window.confirm("회원 탈퇴를 하시겠습니까?")) {
         deleteUserMutation.mutate();
       }
+    } else if (item === "비밀번호 변경") {
+      navigate("/change-password");
     }
   };
   const handleFriendSelect = (friend: Friend) => {
@@ -91,6 +94,11 @@ const MyPage = () => {
       icon: <FaCog className="text-gray-600" />,
       text: "회원탈퇴",
       onClick: () => handleMenuClick("회원탈퇴"),
+    },
+    {
+      icon: <FaEdit className="text-gray-600" />,
+      text: "비밀번호 변경",
+      onClick: () => handleMenuClick("비밀번호 변경"),
     },
   ];
 

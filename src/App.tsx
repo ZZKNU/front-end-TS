@@ -16,6 +16,7 @@ import AdminPage from "./page/AdminPage";
 import MessageDetailPage from "./page/MessageDetailPage";
 import FindPage from "./page/FindPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import ChangePwPage from "./page/ChangePwPage";
 
 function App() {
   // 사이드바 상태 관리
@@ -47,6 +48,7 @@ function App() {
             <Route path="/message/:id" element={<MessageDetailPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/find" element={<FindPage />} />
+            <Route path="/change-password" element={<ChangePwPage />} />
           </Routes>
         </div>
       </BrowserRouter>
