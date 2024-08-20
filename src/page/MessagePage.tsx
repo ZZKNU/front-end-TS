@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiEdit } from "react-icons/fi";
 import { getUserInfo, getReceiveMessage, getPostMessage } from "../apis/api";
 import MessageModal from "../components/Forms/MessageForm";
 import { Message, UserInfo } from "types/type";
@@ -70,6 +70,11 @@ const MessageListPage: React.FC = () => {
     setActiveTab(activeTab === "received" ? "sent" : "received");
   };
 
+  const openModal = (): void => {
+    setSelectedMessage(null);
+    setIsModalOpen(true);
+  };
+
   const closeModal = (): void => {
     setIsModalOpen(false);
     setSelectedMessage(null);
@@ -80,15 +85,11 @@ const MessageListPage: React.FC = () => {
     closeModal();
   };
 
-  const navigateToMessageDetail = (messageId: number): void => {
-    navigate(`/message/${messageId}`);
-  };
-
   const renderMessage = (message: Message) => (
     <div
       key={message.id}
       className="flex justify-between items-center p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors duration-150"
-      onClick={() => navigateToMessageDetail(message.id)}
+      onClick={() => navigate(`/message/${message.id}`)}
     >
       <div className="flex-1">
         <p
@@ -126,10 +127,10 @@ const MessageListPage: React.FC = () => {
           />
           <h1 className="text-xl font-semibold">메시지함</h1>
         </div>
-        {/* <FiEdit
+        <FiEdit
           className="h-6 w-6 cursor-pointer"
           onClick={() => openModal()}
-        /> */}
+        />
       </div>
 
       <div className="flex border-b sticky top-14 bg-white z-10">

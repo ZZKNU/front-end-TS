@@ -25,7 +25,7 @@ const MessageForm: React.FC<MessageFormProps> = ({
   const [page, setPage] = useState<number>(0);
   const [allFriends, setAllFriends] = useState<Friend[]>([]);
 
-  const { data, isLoading, isPending, isError, error } = useQuery<
+  const { data, status, isLoading, isPending, isError, error } = useQuery<
     Friend[],
     Error
   >({

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaPen } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { getBestQuoteDetail } from "../../apis/api";
+import { getBestQuoteDetail, getCategory } from "../../apis/api";
 import React from "react";
 import InputField from "./InputField";
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ interface CreateFormProps {
     quoteType: string;
     author: string;
     nickname: string;
+    category: string;
   }) => Promise<void>;
   editing?: boolean;
   userInfo?: UserInfo;
@@ -26,16 +27,24 @@ const CreateForm: React.FC<CreateFormProps> = ({
 }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [categoryOpt, setCategoryOpt] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     quoteType: "NONE",
     author: "",
     nickname: "",
+    category: "",
   });
   const { id } = useParams();
 
+  const getCategoryList = async () => {
+    const res = await getCategory();
+    setCategoryOpt(res);
+  };
+
   useEffect(() => {
+    getCategoryList();
     if (editing && id) {
       console.log(`Fetching data for post with id: ${id}`);
       const fetchData = async () => {
@@ -48,6 +57,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
             quoteType: data.type || "NONE", // 기본값 설정
             author: data.author,
             nickname: data.nickname,
+            category: data.category || "",
           });
         } catch (error) {
           console.error("Error fetching post data:", error);
@@ -107,6 +117,27 @@ const CreateForm: React.FC<CreateFormProps> = ({
           onChange={handleChange}
           placeholder="작가를 입력해주세요"
         />
+        <div>
+          <label
+            htmlFor="category"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            카테고리
+          </label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className="w-full px-4 py-2 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-300"
+          >
+            {categoryOpt.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
         <div>
           <label
             htmlFor="quoteType"

@@ -135,6 +135,12 @@ export const changePassword = async ({
   });
   return response.data;
 };
+
+export const getCategory = async () => {
+  const response = await axiosInstance.get("/challenges/category");
+  return response.data;
+};
+
 /**
  * 베스트 도전 목록에서 글 작성
  */
@@ -143,19 +149,22 @@ export const writeBestQuote = async ({
   quoteType,
   content,
   author,
+  category,
 }: {
   title: string;
   quoteType: string;
   content: string;
   author: string;
+  category: string;
 }) => {
   const response = await axiosInstance.post("/challenges", {
     title,
     quoteType,
     content,
     author,
+    category,
   });
-  return { data: response.data };
+  return response.data;
 };
 
 /**

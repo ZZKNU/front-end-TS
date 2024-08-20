@@ -34,6 +34,7 @@ const CreatePage = () => {
           quoteType: formData.quoteType,
           content: formData.content,
           author: formData.author,
+          category: formData.category,
         }
         // userInfo.nickname
       );
