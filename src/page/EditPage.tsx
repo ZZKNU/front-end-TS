@@ -1,52 +1,42 @@
 import { FaPen } from "react-icons/fa";
 import CreateForm from "../components/Forms/CreateForm";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { editBestQuote, getUserInfo } from "../apis/api";
-import { UserInfo } from "types/type";
+import { editBestQuote } from "../apis/api";
+import { useUserInfo } from "../hooks/useUserInfo";
+import LoadingSpinner from "../components/UI/LoadingSpinner";
 
 const EditPage = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
-  const [userInfo, setUserInfo] = useState<UserInfo>();
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const info = await getUserInfo();
-        setUserInfo(info);
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-        // TODO: Handle error (e.g., redirect to login page)
-      }
-    };
-    fetchUserInfo();
-  }, []);
+  const navigate = useNavigate();
+  const { data: userInfo, isLoading: isUserLoading } = useUserInfo();
 
   const handleSubmit = async (formData: any) => {
     if (!userInfo) {
       console.error("User not logged in");
-      // TODO: Handle case where user is not logged in
       return;
     }
     try {
-      const result = await editBestQuote({
+      await editBestQuote({
         id: Number(id),
         title: formData.title,
         quoteType: formData.quoteType,
         content: formData.content,
-        author: userInfo.nickname,
+        author: formData.author,
+        category: formData.category,
       });
-      console.log("Form submitted:", result);
       queryClient.invalidateQueries({ queryKey: ["quotes"] });
-      //navigate("/bestlist");
+      navigate("/bestlist");
     } catch (error) {
       console.error("Error submitting post:", error);
-      // TODO: Handle error (e.g., show error message to user)
     }
   };
+
+  if (isUserLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-12">
@@ -81,7 +71,11 @@ const EditPage = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="bg-white shadow-lg rounded-lg overflow-hidden"
         >
-          <CreateForm onSubmit={handleSubmit} editing={true} />
+          <CreateForm
+            onSubmit={handleSubmit}
+            editing={true}
+            userInfo={userInfo}
+          />
         </motion.div>
         <motion.div
           initial={{ opacity: 0 }}

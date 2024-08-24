@@ -2,17 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiTrash2 } from "react-icons/fi";
 import { getSpecificMessage, deleteMessage } from "../apis/api";
-
-interface Message {
-  id: string;
-  sender_id: string;
-  receiver_id: string;
-  sender_nickName: string;
-  receiver_nickName: string;
-  message_title: string;
-  message_content: string;
-  createdAt: string;
-}
+import { Message } from "types/type";
 
 const MessageDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

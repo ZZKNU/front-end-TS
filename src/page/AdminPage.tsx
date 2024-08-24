@@ -1,7 +1,7 @@
 import React from "react";
 import { FiCheckCircle, FiXCircle, FiClock, FiFileText } from "react-icons/fi";
 import { promoteQuote, authorityUser } from "../apis/api";
-import { AdminPost, User } from "types/type";
+import { AdminPost, UserInfo } from "types/type";
 import useAdminData from "../hooks/useAdminData";
 
 const StatusBadge: React.FC<{ status: AdminPost["status"] }> = ({ status }) => {
@@ -78,7 +78,6 @@ const AdminPage: React.FC = () => {
   } = useAdminData();
 
   const handleStatusChange = (id: number, newStatus: AdminPost["status"]) => {
-    console.log(`Post ${id} status changed to ${newStatus}`);
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
         post.id === id ? { ...post, status: newStatus } : post
@@ -89,7 +88,6 @@ const AdminPage: React.FC = () => {
   const handlePromoteQuote = async (id: number) => {
     try {
       await promoteQuote({ quote_id: id, pos: true });
-      console.log(`Quote ${id} promoted successfully`);
       setPromotablePosts((prevPosts) =>
         prevPosts.filter((post) => post.id !== id)
       );
@@ -100,11 +98,10 @@ const AdminPage: React.FC = () => {
 
   const handleAuthorityChange = async (
     id: number,
-    newAuthority: User["authority"]
+    newAuthority: UserInfo["authority"]
   ) => {
     try {
       await authorityUser({ user_id: id, auth: newAuthority });
-      console.log(`User ${id} authority changed to ${newAuthority}`);
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user.id === id ? { ...user, authority: newAuthority } : user
@@ -133,6 +130,7 @@ const AdminPage: React.FC = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <h2 className="text-2xl font-bold mt-2 ml-2">✅ 카테고리 수정</h2>
         <Table
           headers={["ID", "제목", "카테고리", "상태", "작업"]}
           data={posts}
@@ -220,7 +218,7 @@ const AdminPage: React.FC = () => {
                   onChange={(e) =>
                     handleAuthorityChange(
                       user.id,
-                      e.target.value as User["authority"]
+                      e.target.value as UserInfo["authority"]
                     )
                   }
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
