@@ -176,12 +176,14 @@ export const editBestQuote = async ({
   quoteType,
   content,
   author,
+  category,
 }: {
   id: number;
   title: string;
   quoteType: string;
   content: string;
   author: string;
+  category?: string;
 }) => {
   const response = await axiosInstance.put("/challenges", {
     id,
@@ -189,6 +191,7 @@ export const editBestQuote = async ({
     quoteType,
     content,
     author,
+    category,
   });
   return response.data;
 };

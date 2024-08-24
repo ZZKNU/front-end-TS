@@ -7,16 +7,14 @@ import FortuneModal from "../Modals/FortuneModal";
 import MessageModal from "../Forms/MessageForm";
 import { useAuthStore } from "../../store";
 
-// Define the props for the Sidebar component
 interface SidebarProps {
   isOpen: boolean;
   toggleSidebar: () => void;
 }
 
-// Define the props for the NavLink component
 interface NavLinkProps {
   to: string;
-  onClick: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   children: React.ReactNode;
 }
 
@@ -28,84 +26,67 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const toggleMessageModal = () => setIsMessageModalOpen(!isMessageModalOpen);
   const toggleFortuneModal = () => setIsFortuneModalOpen(!isFortuneModalOpen);
 
+  const sidebarAnimation = {
+    initial: { x: "-100%" },
+    animate: { x: 0 },
+    exit: { x: "-100%" },
+    transition: { type: "spring", stiffness: 300, damping: 30 },
+  };
+
+  const renderNavLinks = () => {
+    const links = [
+      { to: "/", text: "홈" },
+      ...(accessToken
+        ? [
+            { to: "/alllist", text: "전체 게시글" },
+            { to: "/create", text: "글쓰기" },
+            { to: "/my", text: "마이페이지" },
+            { to: "/messagelist", text: "쪽지" },
+            {
+              to: "/",
+              text: "로그아웃",
+              onClick: () => {
+                clearAuth();
+                toggleSidebar();
+              },
+            },
+            {
+              to: "#",
+              text: "운세 보기",
+              onClick: (e: React.MouseEvent) => {
+                e.preventDefault();
+                toggleFortuneModal();
+              },
+            },
+          ]
+        : [{ to: "/login", text: "로그인" }]),
+    ];
+
+    return links.map((link, index) => (
+      <NavLink key={index} to={link.to} onClick={link.onClick || toggleSidebar}>
+        {link.text}
+      </NavLink>
+    ));
+  };
+
   return (
     <>
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            {...sidebarAnimation}
             className="fixed top-0 left-0 h-full bg-gradient-to-b from-amber-100 to-amber-200 w-64 z-40 flex flex-col p-4 shadow-lg"
           >
-            <div className="flex justify-between items-center mb-8">
-              <Link
-                to="/"
-                className="text-2xl font-bold tracking-wider no-underline text-amber-800"
-              >
-                Pooguel
-              </Link>
-              <button
-                onClick={toggleSidebar}
-                className="text-amber-700 hover:text-amber-900 transition-colors duration-300"
-              >
-                <FaTimes size={24} />
-              </button>
-            </div>
+            <SidebarHeader toggleSidebar={toggleSidebar} />
             <div className="flex flex-col gap-4">
               {accessToken && <Search />}
-              <NavLink to="/" onClick={toggleSidebar}>
-                홈
-              </NavLink>
-              {accessToken ? (
-                <>
-                  <NavLink to="/alllist" onClick={toggleSidebar}>
-                    전체 게시글
-                  </NavLink>
-                  <NavLink to="/create" onClick={toggleSidebar}>
-                    글쓰기
-                  </NavLink>
-                  <NavLink to="/my" onClick={toggleSidebar}>
-                    마이페이지
-                  </NavLink>
-                  <NavLink to="/messagelist" onClick={toggleSidebar}>
-                    쪽지
-                  </NavLink>
-                  <NavLink
-                    to="/"
-                    onClick={() => {
-                      clearAuth();
-                      toggleSidebar();
-                    }}
-                  >
-                    로그아웃
-                  </NavLink>
-                  <button
-                    onClick={toggleFortuneModal}
-                    className="text-amber-700 hover:text-amber-900 transition-colors duration-300 text-left"
-                  >
-                    운세 보기
-                  </button>
-                </>
-              ) : (
-                <NavLink to="/login" onClick={toggleSidebar}>
-                  로그인
-                </NavLink>
-              )}
+              {renderNavLinks()}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {!isOpen && (
-        <button
-          onClick={toggleSidebar}
-          className="fixed top-4 left-4 z-50 text-amber-800 bg-amber-100 p-2 rounded-full shadow-md hover:bg-amber-200 transition-colors duration-300"
-        >
-          <FaBars size={24} />
-        </button>
-      )}
+      {!isOpen && <SidebarToggleButton toggleSidebar={toggleSidebar} />}
 
       <MessageModal
         isOpen={isMessageModalOpen}
@@ -121,6 +102,36 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     </>
   );
 };
+
+const SidebarHeader: React.FC<{ toggleSidebar: () => void }> = ({
+  toggleSidebar,
+}) => (
+  <div className="flex justify-between items-center mb-8">
+    <Link
+      to="/"
+      className="text-2xl font-bold tracking-wider no-underline text-amber-800"
+    >
+      Pooguel
+    </Link>
+    <button
+      onClick={toggleSidebar}
+      className="text-amber-700 hover:text-amber-900 transition-colors duration-300"
+    >
+      <FaTimes size={24} />
+    </button>
+  </div>
+);
+
+const SidebarToggleButton: React.FC<{ toggleSidebar: () => void }> = ({
+  toggleSidebar,
+}) => (
+  <button
+    onClick={toggleSidebar}
+    className="fixed top-4 left-4 z-50 text-amber-800 bg-amber-100 p-2 rounded-full shadow-md hover:bg-amber-200 transition-colors duration-300"
+  >
+    <FaBars size={24} />
+  </button>
+);
 
 const NavLink: React.FC<NavLinkProps> = ({ to, children, onClick }) => (
   <Link

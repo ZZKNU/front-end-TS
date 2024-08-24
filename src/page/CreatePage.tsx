@@ -2,24 +2,25 @@ import { FaPen } from "react-icons/fa";
 import CreateForm from "../components/Forms/CreateForm";
 import { motion } from "framer-motion";
 import { getUserInfo, writeBestQuote } from "../apis/api";
-import React, { useState, useEffect } from "react";
-import { UserInfo } from "types/type";
+// import React, { useState, useEffect } from "react";
+// import { UserInfo } from "types/type";
+import { useUserInfo } from "../hooks/useUserInfo";
 
 const CreatePage = () => {
-  const [userInfo, setUserInfo] = useState<UserInfo>();
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const info = await getUserInfo();
-        setUserInfo(info);
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-        // TODO: Handle error (e.g., redirect to login page)
-      }
-    };
-    fetchUserInfo();
-  }, []);
+  // const [userInfo, setUserInfo] = useState<UserInfo>();
+  const { data: userInfo, isLoading: isUserLoading } = useUserInfo();
+  // useEffect(() => {
+  //   const fetchUserInfo = async () => {
+  //     try {
+  //       const info = await getUserInfo();
+  //       setUserInfo(info);
+  //     } catch (error) {
+  //       console.error("Error fetching user info:", error);
+  //       // TODO: Handle error (e.g., redirect to login page)
+  //     }
+  //   };
+  //   fetchUserInfo();
+  // }, []);
 
   const handleSubmit = async (formData: any) => {
     if (!userInfo) {

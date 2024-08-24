@@ -26,7 +26,9 @@ const FindPage: React.FC = () => {
         clearInput();
       } else {
         const data = await renewPassword({ name, phone, email });
-        setResult(`비밀번호 : ${data}`);
+        setResult(
+          "이메일로 임시 비밀번호가 전송되었습니다. 이메일을 확인해주세요"
+        );
         clearInput();
       }
     } catch (error) {
@@ -155,7 +157,7 @@ const FindPage: React.FC = () => {
               찾기
             </motion.button>
           </form>
-
+          {/* result를 Alert로 ? */}
           {result && (
             <p className="mt-4 text-center text-sm text-amber-600">{result}</p>
           )}

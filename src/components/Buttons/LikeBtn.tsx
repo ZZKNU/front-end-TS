@@ -1,11 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { likeNormalQuote } from "../../apis/api";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-const LikeButton = ({ isLiked: initialIsLiked, challenge_id }) => {
+interface LikeProps {
+  isLiked: boolean;
+  challenge_id: number | string | undefined;
+}
+const LikeButton: React.FC<LikeProps> = ({
+  isLiked: initialIsLiked,
+  challenge_id,
+}) => {
   const [liked, setLiked] = useState(initialIsLiked);
   const queryClient = useQueryClient();
   const [isAnimating, setIsAnimating] = useState(false);

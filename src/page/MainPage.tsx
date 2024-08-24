@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, useScroll, useTransform, useAnimation } from "framer-motion";
 import { Sun, Heart, MessageCircle, ChevronDown } from "lucide-react";
 import { aphorisms } from "../util/Aphorism";
 import { useAuthStore } from "../store";
@@ -57,19 +52,49 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({ children, className }) => {
   );
 };
 
-const ContentSection: React.FC<ContentSectionProps> = ({ title, children }) => (
-  <motion.section
-    className="min-h-screen flex flex-col items-center justify-center text-amber-800 relative z-10 px-4"
-    initial={{ opacity: 0, y: 50 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-  >
-    <AnimatedText className="text-5xl font-bold mb-6 text-center">
-      {title}
-    </AnimatedText>
-    {children}
-  </motion.section>
-);
+const ContentSection: React.FC<ContentSectionProps> = ({ title, children }) => {
+  const controls = useAnimation();
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const section = document.getElementById(title);
+      if (section && section.getBoundingClientRect().top < window.innerHeight) {
+        setIsVisible(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // 페이지 로드 시 즉시 호출
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [title]);
+
+  useEffect(() => {
+    if (isVisible) {
+      controls.start("visible");
+    }
+  }, [controls, isVisible]);
+
+  return (
+    <motion.section
+      id={title}
+      className="min-h-screen flex flex-col items-center justify-center text-amber-800 relative z-10 px-4"
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      transition={{ duration: 0.8 }}
+    >
+      <AnimatedText className="text-5xl font-bold mb-6 text-center">
+        {title}
+      </AnimatedText>
+      {children}
+    </motion.section>
+  );
+};
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
   icon,
@@ -162,15 +187,13 @@ const MainPage: React.FC = () => {
                   />
                 </motion.button>
               </motion.div>
-              <AnimatePresence>
-                {isOpen && showQuote && (
-                  <QuoteBox
-                    key={showQuote.id}
-                    author={showQuote.author}
-                    quote={showQuote.quote}
-                  />
-                )}
-              </AnimatePresence>
+              {isOpen && showQuote && (
+                <QuoteBox
+                  key={showQuote.id}
+                  author={showQuote.author}
+                  quote={showQuote.quote}
+                />
+              )}
             </>
           ) : (
             <></>

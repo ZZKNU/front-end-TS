@@ -6,21 +6,7 @@ import { deleteQuote, getBestQuoteDetail, getUserInfo } from "../apis/api";
 import LikeButton from "../components/Buttons/LikeBtn";
 import ShareBtn from "../components/Buttons/ShareBtn";
 import { FaTrash, FaEdit, FaArrowLeft } from "react-icons/fa";
-
-interface Post {
-  title: string;
-  createdAt: string;
-  author: string;
-  nickname: string;
-  content: string;
-  isLiked: boolean;
-  categoryName: string;
-}
-
-interface User {
-  authority: string;
-  nickname: string;
-}
+import { UserInfo, Post } from "types/type";
 
 const ShowPage: React.FC = () => {
   const navigate = useNavigate();
@@ -30,7 +16,7 @@ const ShowPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { accessToken } = useAuthStore();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserInfo | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {

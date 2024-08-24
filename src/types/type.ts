@@ -3,7 +3,7 @@ export interface UserInfo {
   nickname: string;
   email: string;
   birthdate: string;
-  authority: string;
+  authority: "USER" | "AUTHOR" | "ADMIN";
 }
 
 export interface LikeItem {
@@ -49,14 +49,6 @@ export interface AdminPost {
   liked: number;
 }
 
-export interface User {
-  id: number;
-  email: string;
-  nickname: string;
-  birthdate: string;
-  authority: "USER" | "AUTHOR" | "ADMIN";
-}
-
 export interface Post {
   id: number;
   title: string;
@@ -65,15 +57,19 @@ export interface Post {
   nickname: string;
   content: string;
   isLiked: boolean;
+  categoryName: string;
 }
 
 export interface Message {
-  id: number;
-  message_title: string;
+  read: boolean;
+  id: string;
+  sender_id: string;
+  receiver_id: string;
   sender_nickName: string;
   receiver_nickName: string;
+  message_title: string;
+  message_content: string;
   createdAt: string;
-  read: boolean;
 }
 
 export interface FollowListResponse {
