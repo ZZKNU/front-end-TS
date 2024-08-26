@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform, useAnimation } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { Sun, Heart, MessageCircle, ChevronDown } from "lucide-react";
 import { aphorisms } from "../util/Aphorism";
 import { useAuthStore } from "../store";
-
-interface AnimatedTextProps {
-  children: React.ReactNode;
-  className?: string;
-}
+import AnimatedText from "../components/AnimatedText";
+import useVisibility from "../hooks/useVisiblity";
 
 interface ContentSectionProps {
   title: string;
@@ -36,39 +33,9 @@ interface Quote {
   author: string;
 }
 
-const AnimatedText: React.FC<AnimatedTextProps> = ({ children, className }) => {
-  const { scrollYProgress } = useScroll();
-  const fontSize = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
-
-  return (
-    <motion.div
-      className={className}
-      style={{ scale: fontSize }}
-      whileHover={{ scale: 1.1 }}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
 const ContentSection: React.FC<ContentSectionProps> = ({ title, children }) => {
   const controls = useAnimation();
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const section = document.getElementById(title);
-      if (section && section.getBoundingClientRect().top < window.innerHeight) {
-        setIsVisible(true);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // 페이지 로드 시 즉시 호출
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [title]);
+  const isVisible = useVisibility(title);
 
   useEffect(() => {
     if (isVisible) {
