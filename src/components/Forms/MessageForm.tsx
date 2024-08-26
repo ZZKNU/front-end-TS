@@ -10,7 +10,7 @@ interface MessageFormProps {
   onSendMessage: (message: { recipient: string; message: string }) => void;
   onClose: () => void;
   initialRecipient?: string;
-  userId: number;
+  userId: number | undefined;
 }
 
 const MessageForm: React.FC<MessageFormProps> = ({
@@ -137,7 +137,7 @@ interface MessageModalProps {
   onClose: () => void;
   onSendMessage: (message: { recipient: string; message: string }) => void;
   initialRecipient?: string;
-  userId: number;
+  userId: number | undefined;
 }
 
 const MessageModal: React.FC<MessageModalProps> = ({
