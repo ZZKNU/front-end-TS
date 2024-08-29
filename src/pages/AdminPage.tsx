@@ -4,16 +4,22 @@ import { promoteQuote, authorityUser } from "../apis/api";
 import { AdminPost, UserInfo } from "types/type";
 import useAdminData from "../hooks/useAdminData";
 
-const StatusBadge: React.FC<{ status: AdminPost["status"] }> = ({ status }) => {
+enum Status {
+  PENDING = "PENDING",
+  ACCEPT = "ACCEPT",
+  REJECT = "REJECT",
+}
+
+const StatusBadge: React.FC<{ status: Status }> = ({ status }) => {
   const styles = {
-    PENDING: "bg-yellow-200 text-yellow-800",
-    ACCEPT: "bg-green-200 text-green-800",
-    REJECT: "bg-red-200 text-red-800",
+    [Status.PENDING]: "bg-yellow-200 text-yellow-800",
+    [Status.ACCEPT]: "bg-green-200 text-green-800",
+    [Status.REJECT]: "bg-red-200 text-red-800",
   };
   const icons = {
-    PENDING: <FiClock className="inline mr-1" />,
-    ACCEPT: <FiCheckCircle className="inline mr-1" />,
-    REJECT: <FiXCircle className="inline mr-1" />,
+    [Status.PENDING]: <FiClock className="inline mr-1" />,
+    [Status.ACCEPT]: <FiCheckCircle className="inline mr-1" />,
+    [Status.REJECT]: <FiXCircle className="inline mr-1" />,
   };
   return (
     <span
@@ -77,7 +83,7 @@ const AdminPage: React.FC = () => {
     setPromotablePosts,
   } = useAdminData();
 
-  const handleStatusChange = (id: number, newStatus: AdminPost["status"]) => {
+  const handleStatusChange = (id: number, newStatus: Status) => {
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
         post.id === id ? { ...post, status: newStatus } : post
@@ -144,16 +150,16 @@ const AdminPage: React.FC = () => {
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <button
-                  onClick={() => handleStatusChange(post.id, "ACCEPT")}
+                  onClick={() => handleStatusChange(post.id, Status.ACCEPT)}
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2"
-                  disabled={post.status === "ACCEPT"}
+                  disabled={post.status === Status.ACCEPT}
                 >
                   수락
                 </button>
                 <button
-                  onClick={() => handleStatusChange(post.id, "REJECT")}
+                  onClick={() => handleStatusChange(post.id, Status.REJECT)}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                  disabled={post.status === "REJECT"}
+                  disabled={post.status === Status.REJECT}
                 >
                   거절
                 </button>

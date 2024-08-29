@@ -2,22 +2,22 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState, lazy } from "react";
-import LoginPage from "./page/LoginPage";
-import JoinPage from "./page/JoinPage";
+import LoginPage from "./pages/LoginPage";
+import JoinPage from "./pages/JoinPage";
 import Sidebar from "./components/UI/Sidebar";
-import MainPage from "./page/MainPage";
-import CreatePage from "./page/CreatePage";
-import AllListPage from "./page/AllListPage";
-import BestListPage from "./page/BestListPage";
-import MyPage from "./page/MyPage";
-import ShowPage from "./page/ShowPage";
-import EditPage from "./page/EditPage";
-import MessagePage from "./page/MessagePage";
-import MessageDetailPage from "./page/MessageDetailPage";
+import MainPage from "./pages/MainPage";
+import CreatePage from "./pages/CreatePage";
+import AllListPage from "./pages/AllListPage";
+import BestListPage from "./pages/BestListPage";
+import MyPage from "./pages/MyPage";
+import ShowPage from "./pages/ShowPage";
+import EditPage from "./pages/EditPage";
+import MessagePage from "./pages/MessagePage";
+import MessageDetailPage from "./pages/MessageDetailPage";
 
-const FindPage = lazy(() => import("./page/FindPage"));
-const ChangePwPage = lazy(() => import("./page/ChangePwPage"));
-const AdminPage = lazy(() => import("./page/AdminPage"));
+const FindPage = lazy(() => import("./pages/FindPage"));
+const ChangePwPage = lazy(() => import("./pages/ChangePwPage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
 
 function App() {
   // 사이드바 상태 관리

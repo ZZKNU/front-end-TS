@@ -1,3 +1,5 @@
+import { EnumType } from "typescript";
+
 export interface UserInfo {
   id: number;
   nickname: string;
@@ -41,7 +43,8 @@ export interface AdminPost {
   id: number;
   title: string;
   category: string;
-  status: "PENDING" | "ACCEPT" | "REJECT";
+  // status: "PENDING" | "ACCEPT" | "REJECT";
+  status: EnumType;
   type: string;
   content: string;
   author: string;
